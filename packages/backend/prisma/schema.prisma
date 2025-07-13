@@ -1,0 +1,32 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// 定义数据模型
+model Category {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  tools       Tool[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Tool {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  icon        String?
+  url         String
+  popular     Int      @default(0)
+  tags        String?  // 存储为JSON字符串
+  categoryId  Int
+  category    Category @relation(fields: [categoryId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

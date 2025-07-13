@@ -1,0 +1,37 @@
+@import './base.css';
+
+#app {
+  /* 移除或增加 max-width 限制 */
+  max-width: 100%; /* 或者设置为更大的值，如 1920px */
+  margin: 0 auto;
+  padding: 2rem;
+  font-weight: normal;
+}
+
+a,
+.green {
+  text-decoration: none;
+  color: hsla(160, 100%, 37%, 1);
+  transition: 0.4s;
+  padding: 3px;
+}
+
+@media (hover: hover) {
+  a:hover {
+    background-color: hsla(160, 100%, 37%, 0.2);
+  }
+}
+
+@media (min-width: 1024px) {
+  body {
+    display: flex;
+    place-items: center;
+  }
+
+  #app {
+    /* 如果不需要两列布局，可以注释掉这些行 */
+    /* display: grid;
+    grid-template-columns: 1fr 1fr; */
+    padding: 0 2rem;
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "devkit-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:frontend": "cd packages/frontend && bun run dev",
+    "dev:backend": "cd packages/backend && bun run dev",
+    "dev": "concurrently \"bun run dev:frontend\" \"bun run dev:backend\"",
+    "build": "bun run build:frontend && bun run build:backend",
+    "build:frontend": "cd packages/frontend && bun run build",
+    "build:backend": "cd packages/backend && bun run build"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  }
+}
