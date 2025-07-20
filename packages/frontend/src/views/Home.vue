@@ -23,6 +23,7 @@
         </div>
 
         <div>
+          <el-button type="primary" @click="router.push('/management')" class="mr-4">管理</el-button>
           <el-switch
             v-model="isDarkMode"
             :active-icon="Moon"

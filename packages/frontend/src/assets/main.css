@@ -23,11 +23,6 @@ a,
 }
 
 @media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
-
   #app {
     /* 如果不需要两列布局，可以注释掉这些行 */
     /* display: grid;

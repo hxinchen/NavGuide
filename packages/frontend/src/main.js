@@ -6,6 +6,7 @@ import App from './App.vue'
 import ElementPlus from 'element-plus'
 import router from './router'
 import 'element-plus/dist/index.css' // 引入element-plus样式
+import './styles/main.css' // 引入全局样式
 
 const app = createApp(App)
 app.use(router)

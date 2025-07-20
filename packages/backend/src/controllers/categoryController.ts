@@ -28,13 +28,14 @@ export default {
                 where:{id},
                 include:{tools:true}
             });
+            
             if(!category){
                 ctx.status=404;
                 ctx.body={error:'分类不存在'};
                 return;
             }
             ctx.body=category;
-
+            
         }catch(error){
             ctx.status=500;
             ctx.body={error:error instanceof Error? error.message:'查询失败'}
