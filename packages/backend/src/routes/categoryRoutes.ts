@@ -2,7 +2,7 @@ import Router from 'koa-router';
 import categoryController from '../controllers/categoryController';
 
 const router =new Router({
-    prefix:'/api/category'
+    prefix:'/api/categories'
 });
 
 router.get('/',categoryController.getAllCategory)

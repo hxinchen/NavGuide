@@ -23,7 +23,12 @@
         </div>
 
         <div>
-          <el-button type="primary" @click="router.push('/management')" class="mr-4">管理</el-button>
+          <el-button
+            type="primary"
+            @click="router.push('/management')"
+            class="mr-4"
+            >管理</el-button
+          >
           <el-switch
             v-model="isDarkMode"
             :active-icon="Moon"
@@ -85,7 +90,7 @@
                   <h3 class="category-name">{{ category.name }}</h3>
                 </div>
                 <router-link
-                  :to="{ name: 'Category', params: { id: category.id } }"
+                  :to="{ name: 'management-categories' }"
                   class="view-all-link"
                 >
                   查看全部

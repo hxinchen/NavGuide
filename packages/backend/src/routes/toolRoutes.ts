@@ -2,7 +2,7 @@ import Router from 'koa-router';
 import toolController from '../controllers/toolController';
 
 const router=new Router({
-    prefix:'api/tool'
+    prefix:'/api/tools'
 });
 
 router.get('/',toolController.getAllTools);
