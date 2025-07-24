@@ -1,170 +1,191 @@
 <template>
   <div class="page-container">
     <!-- 顶部导航栏 -->
-    <header class="header">
-      <div class="header-content">
-        <div class="logo-section">
+    <v-app-bar
+      flat
+      class="px-0 border-b border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-black/80 backdrop-blur-md"
+    >
+      <v-container class="d-flex align-center">
+        <div class="d-flex align-center gap-3">
           <div class="logo-icon">
-            <el-icon :size="24"><Tools /></el-icon>
+            <v-icon size="24">mdi-tools</v-icon>
           </div>
-          <h1 class="logo-text">DevKit</h1>
+          <h1 class="text-xl font-bold tracking-tight">DevKit</h1>
         </div>
 
-        <div class="search-section">
-          <el-input
-            v-model="searchQuery"
-            placeholder="搜索开发工具..."
-            class="search-input"
-            :prefix-icon="Search"
-            clearable
-            @focus="onSearchFocus"
-            @blur="onSearchBlur"
-          />
-        </div>
+        <v-spacer></v-spacer>
 
-        <div>
-          <el-button
-            type="primary"
-            @click="router.push('/management')"
-            class="mr-4"
-            >管理</el-button
-          >
-          <el-switch
-            v-model="isDarkMode"
-            :active-icon="Moon"
-            :inactive-icon="Sunny"
-            @change="toggleTheme"
-          />
-        </div>
-      </div>
-    </header>
+        <v-text-field
+          v-model="searchQuery"
+          density="compact"
+          variant="outlined"
+          placeholder="搜索开发工具..."
+          prepend-inner-icon="mdi-magnify"
+          class="mx-8 max-w-md"
+          hide-details
+          clearable
+          @focus="onSearchFocus"
+          @blur="onSearchBlur"
+        ></v-text-field>
+
+        <v-btn color="primary" class="mr-4" @click="router.push('/management')">
+          管理
+        </v-btn>
+        <v-switch
+          v-model="isDarkMode"
+          :prepend-icon="isDarkMode ? 'mdi-weather-night' : 'mdi-weather-sunny'"
+          hide-details
+          @update:model-value="toggleTheme"
+        ></v-switch>
+      </v-container>
+    </v-app-bar>
 
     <!-- 主要内容区域 -->
-    <main class="main-content">
-      <div class="container">
+    <v-main class="py-8">
+      <v-container>
         <!-- 欢迎区域 -->
-        <section v-if="!searchQuery" class="welcome-section">
-          <h2 class="welcome-title">开发者工具导航</h2>
-          <p class="welcome-subtitle">精选优质开发工具，提升您的开发效率</p>
-          <div class="stats-container">
-            <div v-for="(stat, index) in stats" :key="index" class="stat-item">
-              <span class="stat-number">{{ stat.number }}</span>
-              <span class="stat-label">{{ stat.label }}</span>
+        <section
+          v-if="!searchQuery"
+          class="text-center py-12 mb-12 animate-fade-in"
+        >
+          <h2 class="text-4xl font-bold mb-3">开发者工具导航</h2>
+          <p class="text-lg text-gray-600 dark:text-gray-400 mb-8">
+            精选优质开发工具，提升您的开发效率
+          </p>
+          <div class="d-flex justify-center gap-12">
+            <div
+              v-for="(stat, index) in stats"
+              :key="index"
+              class="d-flex flex-column align-center"
+            >
+              <span class="text-3xl font-bold">{{ stat.number }}</span>
+              <span
+                class="text-sm text-gray-500 dark:text-gray-400 text-uppercase"
+                >{{ stat.label }}</span
+              >
             </div>
           </div>
         </section>
 
         <!-- 分类过滤器 -->
-        <section v-if="!searchQuery" class="filter-section">
-          <div class="filter-container">
-            <button
+        <section v-if="!searchQuery" class="mb-12">
+          <div class="d-flex flex-wrap justify-center gap-2">
+            <v-btn
               v-for="category in allCategories"
               :key="category.id"
-              :class="[
-                'filter-button',
-                activeCategory === category.id
-                  ? 'filter-button-active'
-                  : 'filter-button-inactive',
-              ]"
+              :variant="activeCategory === category.id ? 'flat' : 'outlined'"
+              :color="activeCategory === category.id ? 'primary' : 'default'"
+              rounded="pill"
               @click="setActiveCategory(category.id)"
             >
               {{ category.name }}
-            </button>
+            </v-btn>
           </div>
         </section>
 
         <!-- 工具分类展示 -->
         <section>
-          <div
-            v-if="filteredCategories.length > 0"
-            class="categories-container"
-          >
-            <div
+          <div v-if="filteredCategories.length > 0" class="space-y-12">
+            <v-card
               v-for="category in displayedCategories"
               :key="category.id"
-              class="category-card"
+              class="bg-gray-50 dark:bg-gray-900 rounded-xl pa-6 transition-all hover:translate-y-[-4px]"
+              variant="outlined"
             >
-              <div class="category-header">
-                <div class="category-title">
-                  <el-icon :size="20"><FolderOpened /></el-icon>
-                  <h3 class="category-name">{{ category.name }}</h3>
+              <div
+                class="d-flex justify-space-between align-center pb-4 mb-6 border-b border-gray-200 dark:border-gray-800"
+              >
+                <div class="d-flex align-center gap-3">
+                  <v-icon>mdi-folder-open</v-icon>
+                  <h3 class="text-xl font-semibold">{{ category.name }}</h3>
                 </div>
-                <router-link
+                <v-btn
+                  variant="text"
                   :to="{ name: 'management-categories' }"
-                  class="view-all-link"
+                  class="text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white"
                 >
                   查看全部
-                  <el-icon><ArrowRight /></el-icon>
-                </router-link>
+                  <v-icon>mdi-arrow-right</v-icon>
+                </v-btn>
               </div>
 
-              <div class="tools-grid">
-                <div
+              <v-row>
+                <v-col
                   v-for="(tool, index) in category.tools.slice(0, 8)"
                   :key="tool.id"
-                  class="tool-card group"
+                  cols="12"
+                  sm="6"
+                  lg="3"
                   :style="{ animationDelay: `${index * 0.1}s` }"
-                  @click="openTool(tool.url)"
                 >
-                  <div class="tool-card-shine"></div>
+                  <v-card
+                    class="tool-card position-relative overflow-hidden"
+                    variant="outlined"
+                    @click="openTool(tool.url)"
+                  >
+                    <div class="tool-card-shine"></div>
 
-                  <div class="tool-icon">
-                    <el-image
-                      style="transform: scale(0.75)"
-                      :src="getEnhancedFaviconUrl(tool.url)"
-                      :alt="tool.name"
-                      fit="contain"
-                    >
-                      <template #error>
-                        <div class="tool-icon-fallback">
-                          <el-icon><Picture /></el-icon>
-                        </div>
-                      </template>
-                    </el-image>
-                  </div>
+                    <v-card-item>
+                      <div class="tool-icon mb-4">
+                        <v-img
+                          :src="getEnhancedFaviconUrl(tool.url)"
+                          :alt="tool.name"
+                          contain
+                          width="32"
+                          height="32"
+                        >
+                          <template v-slot:error>
+                            <v-icon class="text-gray-400">mdi-image</v-icon>
+                          </template>
+                        </v-img>
+                      </div>
 
-                  <div class="tool-content">
-                    <h4 class="tool-name">{{ tool.name }}</h4>
-                    <p class="tool-description">
-                      {{ tool.description }}
-                    </p>
-                  </div>
+                      <v-card-title class="font-medium pa-0 mb-1">{{
+                        tool.name
+                      }}</v-card-title>
+                      <v-card-text
+                        class="text-sm text-gray-500 dark:text-gray-400 pa-0 line-clamp-2"
+                      >
+                        {{ tool.description }}
+                      </v-card-text>
+                    </v-card-item>
 
-                  <div class="tool-link-icon">
-                    <el-icon><Link /></el-icon>
-                  </div>
-                </div>
-              </div>
-            </div>
+                    <div class="tool-link-icon">
+                      <v-icon>mdi-link</v-icon>
+                    </div>
+                  </v-card>
+                </v-col>
+              </v-row>
+            </v-card>
           </div>
 
-          <el-empty
+          <v-sheet
             v-else-if="searchQuery"
-            description="未找到相关工具"
-            :image-size="120"
-          />
+            class="d-flex flex-column align-center justify-center pa-8"
+          >
+            <v-icon size="x-large" class="mb-4">mdi-magnify-off</v-icon>
+            <span class="text-h6">未找到相关工具</span>
+          </v-sheet>
         </section>
-      </div>
-    </main>
+      </v-container>
+    </v-main>
 
     <!-- 返回顶部 -->
-    <el-backtop :right="30" :bottom="30" />
+    <v-btn
+      icon
+      color="primary"
+      class="position-fixed"
+      style="bottom: 30px; right: 30px"
+      @click="scrollToTop"
+    >
+      <v-icon>mdi-arrow-up</v-icon>
+    </v-btn>
   </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import {
-  Search,
-  Tools,
-  FolderOpened,
-  ArrowRight,
-  Picture,
-  Link,
-  Moon,
-  Sunny,
-} from "@element-plus/icons-vue";
 
 // 路由
 const router = useRouter();
@@ -266,14 +287,6 @@ const categories = ref([
 function getEnhancedFaviconUrl(url) {
   try {
     const domain = new URL(url).origin;
-    // 尝试多种可能的 favicon 路径
-    // return [
-    //   `${domain}/favicon.ico`,
-    //   `${domain}/favicon.png`,
-    //   `${domain}/apple-touch-icon.png`,
-    //   `https://www.google.com/s2/favicons?domain=${domain}` // Google 的 favicon 服务
-    // ];
-    // return `${domain}/favicon.ico`;
     return `https://www.google.com/s2/favicons?sz=64&domain=${domain}`;
   } catch (e) {
     console.error("Invalid URL:", url);
@@ -334,6 +347,13 @@ const toggleTheme = () => {
   localStorage.setItem("theme", isDarkMode.value ? "dark" : "light");
 };
 
+const scrollToTop = () => {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
+};
+
 onMounted(() => {
   console.log("路由：", router.getRoutes());
 
@@ -355,153 +375,25 @@ onMounted(() => {
 }
 
 /* 顶部导航栏 */
-.header {
-  @apply sticky top-0 z-50 bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 transition-all duration-300;
-}
-
-.header-content {
-  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between;
-}
-
-.logo-section {
-  @apply flex items-center gap-3;
-}
-
 .logo-icon {
   @apply w-10 h-10 bg-black dark:bg-white text-white dark:text-black rounded-lg flex items-center justify-center transition-transform hover:rotate-3 hover:scale-105;
 }
 
-.logo-text {
-  @apply text-xl font-bold tracking-tight;
-}
-
-.search-section {
-  @apply flex-1 max-w-md mx-8;
-}
-
-/* 主要内容区域 */
-.main-content {
-  @apply py-8;
-}
-
-.container {
-  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
-}
-
-/* 欢迎区域 */
-.welcome-section {
-  @apply text-center py-12 mb-12 animate-fade-in;
-}
-
-.welcome-title {
-  @apply text-4xl font-bold mb-3;
-}
-
-.welcome-subtitle {
-  @apply text-lg text-gray-600 dark:text-gray-400 mb-8;
-}
-
-.stats-container {
-  @apply flex justify-center gap-12;
-}
-
-.stat-item {
-  @apply flex flex-col items-center;
-}
-
-.stat-number {
-  @apply text-3xl font-bold;
-}
-
-.stat-label {
-  @apply text-sm text-gray-500 dark:text-gray-400 uppercase tracking-wider;
-}
-
-/* 分类过滤器 */
-.filter-section {
-  @apply mb-12;
-}
-
-.filter-container {
-  @apply flex flex-wrap justify-center gap-2;
-}
-
-.filter-button {
-  @apply px-5 py-2 rounded-full border transition-all duration-200;
-}
-
-.filter-button-active {
-  @apply bg-black text-white dark:bg-white dark:text-black border-transparent;
-}
-
-.filter-button-inactive {
-  @apply bg-white dark:bg-black text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-800 hover:border-gray-400 dark:hover:border-gray-600;
-}
-
-/* 工具分类展示 */
-.categories-container {
-  @apply space-y-12;
-}
-
-.category-card {
-  @apply bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 transition-all duration-300 hover:translate-y-[-4px] hover:shadow-lg;
-}
-
-.category-header {
-  @apply flex justify-between items-center pb-4 mb-6 border-b border-gray-200 dark:border-gray-800;
-}
-
-.category-title {
-  @apply flex items-center gap-3;
-}
-
-.category-name {
-  @apply text-xl font-semibold;
-}
-
-.view-all-link {
-  @apply flex items-center gap-2 text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white transition-all duration-200 hover:translate-x-1 text-sm font-medium;
-}
-
-.tools-grid {
-  @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4;
-}
-
+/* 工具卡片 */
 .tool-card {
-  @apply bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-xl p-5 cursor-pointer transition-all duration-300 hover:translate-y-[-2px] hover:shadow-md hover:border-gray-400 dark:hover:border-gray-600 relative overflow-hidden;
+  @apply bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-xl p-5 cursor-pointer transition-all duration-300 hover:translate-y-[-2px] hover:shadow-md hover:border-gray-400 dark:hover:border-gray-600;
 }
 
 .tool-card-shine {
-  @apply absolute inset-0 bg-gradient-to-r from-transparent via-black/5 dark:via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out;
+  @apply absolute inset-0 bg-gradient-to-r from-transparent via-black/5 dark:via-white/5 to-transparent -translate-x-full hover:translate-x-full transition-transform duration-700 ease-in-out;
 }
 
 .tool-icon {
-  @apply w-12 h-12 mb-4 rounded-lg overflow-hidden bg-gray-50 dark:bg-gray-800 flex items-center justify-center border border-gray-200 dark:border-gray-700;
-}
-
-.tool-icon-fallback {
-  @apply text-gray-400;
-}
-
-.tool-content {
-  @apply relative z-10;
-}
-
-.tool-name {
-  @apply font-medium mb-1;
-}
-
-.tool-description {
-  @apply text-sm text-gray-500 dark:text-gray-400 line-clamp-2;
+  @apply w-12 h-12 rounded-lg overflow-hidden bg-gray-50 dark:bg-gray-800 flex items-center justify-center border border-gray-200 dark:border-gray-700;
 }
 
 .tool-link-icon {
-  @apply absolute top-3 right-3 w-8 h-8 bg-black dark:bg-white text-white dark:text-black rounded-full flex items-center justify-center opacity-0 scale-90 group-hover:opacity-100 group-hover:scale-100 transition-all duration-300;
-}
-
-/* Element Plus 组件样式覆盖 */
-.search-input :deep(.el-input__wrapper) {
-  @apply rounded-full border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900;
+  @apply absolute top-3 right-3 w-8 h-8 bg-black dark:bg-white text-white dark:text-black rounded-full flex items-center justify-center opacity-0 scale-90 hover:opacity-100 hover:scale-100 transition-all duration-300;
 }
 
 /* 文本截断工具类 */
@@ -526,5 +418,10 @@ onMounted(() => {
 
 .animate-fade-in {
   animation: fadeInUp 0.6s ease-out;
+}
+
+/* 空间间隔 */
+.space-y-12 > * + * {
+  margin-top: 3rem;
 }
 </style>

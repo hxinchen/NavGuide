@@ -1,113 +1,77 @@
 <template>
-  <div class="management-layout">
-    <!-- 侧边栏导航 -->
-    <aside class="sidebar">
-      <el-menu
-        :default-active="route.path"
-        class="el-menu-vertical-demo"
-        router
-      >
-        <el-menu-item index="/management/categories">
-          <el-icon><Grid /></el-icon>
-          <span>分类管理</span>
-        </el-menu-item>
-        <el-menu-item index="/management/tools">
-          <el-icon><Tools /></el-icon>
-          <span>工具管理</span>
-        </el-menu-item>
-      </el-menu>
-    </aside>
+  <div>
+    <!-- 侧边导航栏 -->
+    <v-navigation-drawer permanent>
+      <v-list>
+        <v-list-item
+          to="/management/categories"
+          :active="route.path === '/management/categories'"
+          prepend-icon="mdi-shape"
+          title="分类管理"
+        ></v-list-item>
+        <v-list-item
+          to="/management/tools"
+          :active="route.path === '/management/tools'"
+          prepend-icon="mdi-tools"
+          title="工具管理"
+        ></v-list-item>
+      </v-list>
+    </v-navigation-drawer>
 
-    <!-- 右侧内容 -->
-    <div class="content-wrapper">
-      <!-- 顶部导航 -->
-      <header
-        class="sticky top-0 z-50 bg-white/80 dark:bg-black/80 border-b border-gray-200 dark:border-gray-800 backdrop-blur-md w-full"
-      >
-        <div
-          class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center"
-        >
-          <div class="flex-shrink-0">
-            <el-breadcrumb separator="/">
-              <el-breadcrumb-item :to="{ path: '/' }">
-                <el-icon><House /></el-icon>
-                首页
-              </el-breadcrumb-item>
-              <el-breadcrumb-item>管理中心</el-breadcrumb-item>
-              <el-breadcrumb-item :to="route.path">{{
-                route.name === "management-categories" ? "分类管理" : "工具管理"
-              }}</el-breadcrumb-item>
-            </el-breadcrumb>
-          </div>
-          <div class="flex items-center gap-4">
-            <el-button type="primary" @click="goBack">
-              <el-icon><Back /></el-icon>
-              返回首页
-            </el-button>
-          </div>
-        </div>
-      </header>
+    <!-- 主内容区域 -->
+    <v-main>
+      <!-- 顶部导航栏 -->
+      <v-app-bar flat>
+        <v-breadcrumbs :items="breadcrumbItems"></v-breadcrumbs>
+        <v-spacer></v-spacer>
+        <v-btn color="primary" prepend-icon="mdi-arrow-left" @click="goBack">
+          返回首页
+        </v-btn>
+      </v-app-bar>
 
       <!-- 内容区域 -->
-      <main class="main-content">
+      <v-container fluid class="pa-4">
         <router-view v-slot="{ Component }">
           <transition name="fade" mode="out-in">
             <component :is="Component" />
           </transition>
         </router-view>
-      </main>
-    </div>
+      </v-container>
+    </v-main>
   </div>
 </template>
 
 <script setup>
+import { computed } from 'vue';
 import { useRouter, useRoute } from "vue-router";
+
 const router = useRouter();
 const route = useRoute();
+
+// 面包屑导航
+const breadcrumbItems = computed(() => [
+  {
+    title: '首页',
+    disabled: false,
+    href: '/',
+  },
+  {
+    title: '管理中心',
+    disabled: true,
+  },
+  {
+    title: route.name === 'management-categories' ? '分类管理' : '工具管理',
+    disabled: true,
+  },
+]);
+
 function goBack() {
   router.push("/");
 }
 </script>
 
 <style scoped>
-.management-layout {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  height: 100%; /* 继承来自 #app-root 的100%高度 */
-  background-color: #f0f2f5;
-}
-
-.sidebar {
-  width: 15dvw;
-  flex-shrink: 0;
-  background-color: #fff;
-  border-right: 1px solid #dcdfe6;
-}
-
-.el-menu {
-  height: 100%;
-  border-right: none;
-}
-
-.content-wrapper {
-  display: flex;
-  flex-direction: column;
-  flex: 1; /* 占据剩余的所有宽度 */
-  min-width: 0; /* flex 布局下的一个健壮性设置，防止内容溢出 */
-}
-
-header {
-  flex-shrink: 0; /* 防止 header 被压缩 */
-}
-
-.main-content {
-  /* flex: 1; 占据 content-wrapper 垂直方向的剩余空间 */
-  overflow-y: auto; /* 关键：只在这里应用滚动条 */
-  flex-grow: 1;
-  padding: 20px;
-}
-
+/* 过渡动画 */
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.2s ease;
