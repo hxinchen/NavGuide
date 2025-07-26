@@ -7,5 +7,8 @@ const router =new Router({
 
 router.get('/',categoryController.getAllCategory)
 router.get('/:id',categoryController.getCategoryByid)
+router.post('/',categoryController.createCategory)
+router.put('/:id',categoryController.updateCategory)
+router.delete('/:id',categoryController.deleteCategory)
 
 export default router;

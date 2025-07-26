@@ -10,12 +10,20 @@ import '@mdi/font/css/materialdesignicons.css'
 const vuetify = createVuetify({
   components,
   directives,
+  defaults:{
+    VSelect: {
+      color: 'primary'
+    },
+    VTextField:{
+      color:'primary'
+    }
+  },
   theme: {
     defaultTheme: 'light',
     themes: {
       light: {
         colors: {
-          primary: '#1867C0',
+          primary: '#20B2AA',
           secondary: '#5CBBF6',
           accent: '#4CAF50',
           error: '#FF5252',

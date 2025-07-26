@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- 侧边导航栏 -->
-    <v-navigation-drawer permanent>
+    <v-navigation-drawer permanent expand-on-hover rail>
       <v-list>
         <v-list-item
           to="/management/categories"
@@ -30,7 +30,7 @@
       </v-app-bar>
 
       <!-- 内容区域 -->
-      <v-container fluid class="pa-4">
+      <v-container fluid >
         <router-view v-slot="{ Component }">
           <transition name="fade" mode="out-in">
             <component :is="Component" />
@@ -80,5 +80,8 @@ function goBack() {
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+.v-container{
+  @apply p-0;
 }
 </style>
